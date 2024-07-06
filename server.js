@@ -25,7 +25,8 @@ io.on('connection', (socket) => {
     // เมื่อเชื่อมต่อ
 socket.on('get-all-rooms', () => {
     // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client ในรูปแบบของ Array ที่มีชื่อห้องทั้งหมด
-    socket.emit('all-rooms', Array.from(rooms.keys()));
+    socket.emit('all-rooms', Array.from(rooms.values()));
+    socket.emit('all-rooms', allRooms);
 });
 
 

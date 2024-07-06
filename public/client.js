@@ -9,12 +9,11 @@ socket.on('connect', () => {
 });
 
 // รับข้อมูลห้องทั้งหมดจากเซิร์ฟเวอร์
-socket.on('all-rooms', (roomNamesArray) => {
+socket.on('all-rooms', (rooms) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    // สร้างปุ่มห้องสำหรับแต่ละ roomName
-    roomNamesArray.forEach(roomName => {
+    rooms.forEach(roomName => {
         const roomButton = document.createElement('button');
         roomButton.textContent = roomName;
         roomButton.addEventListener('click', () => {
@@ -23,6 +22,7 @@ socket.on('all-rooms', (roomNamesArray) => {
         existingRoomsContainer.appendChild(roomButton);
     });
 });
+
 
 
 
