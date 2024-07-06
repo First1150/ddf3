@@ -28,7 +28,21 @@ socket.on('room-created', ({ roomId, roomName }) => {
     });
     document.getElementById('existing-rooms-home').appendChild(roomButton.cloneNode(true));
     document.getElementById('existing-rooms-selection').appendChild(roomButton);
+    // เพิ่มปุ่มห้องใหม่ให้กับผู้ใช้ที่อยู่ในหน้าเว็บไซต์แล้วด้วยการส่งข้อมูลให้กับผู้ใช้ทั้งหมด
+    socket.emit('update-room-buttons', roomName);
     
+});
+// เพิ่มการรับ socket event 'update-room-buttons'
+socket.on('update-room-buttons', (roomName) => {
+    const roomButton = document.createElement('button');
+    roomButton.textContent = roomName;
+    roomButton.addEventListener('click', () => {
+        joinRoom(roomName);
+    });
+
+    // Add room button to both home and selection pages
+    document.getElementById('existing-rooms-home').appendChild(roomButton.cloneNode(true));
+    document.getElementById('existing-rooms-selection').appendChild(roomButton);
 });
 
 document.getElementById('enter-room-button').addEventListener('click', () => {
