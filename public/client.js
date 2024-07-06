@@ -26,7 +26,8 @@ socket.on('room-created', ({ roomId, roomName }) => {
     roomButton.addEventListener('click', () => {
         joinRoom(roomName);
     });
-    document.getElementById('existing-rooms').appendChild(roomButton);
+    document.getElementById('existing-rooms-home').appendChild(roomButton.cloneNode(true));
+    document.getElementById('existing-rooms-selection').appendChild(roomButton);
     
 });
 
@@ -63,20 +64,6 @@ socket.on('update-online-users', (users) => {
     });
 
     onlineUsersContainer.appendChild(usersList);
-});
-// รับห้อง
-socket.on('update-online-rooms', (rooms) => {
-    const onlineRoomsContainer = document.getElementById('online-rooms');
-    onlineRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
-    const roomsList = document.createElement('ul');
-
-    rooms.forEach(room => {
-        const roomItem = document.createElement('li');
-        roomItem.textContent = room;
-        roomsList.appendChild(roomItem);
-    });
-
-    onlineRoomsContainer.appendChild(roomsList);
 });
 
 
