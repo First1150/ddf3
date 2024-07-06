@@ -10,6 +10,32 @@ document.getElementById('join-room-button').addEventListener('click', () => {
 document.getElementById('create-room-button').addEventListener('click', () => {
     createRoom();
 });
+// เมื่อหน้าเว็บโหลดเสร็จสมบูรณ์
+document.addEventListener('DOMContentLoaded', () => {
+    // ขอข้อมูลห้องทั้งหมดจากเซิร์ฟเวอร์
+    socket.emit('get-all-rooms');
+
+    // ฟังก์ชันที่เรียกเมื่อได้รับข้อมูลห้องทั้งหมด
+    socket.on('all-rooms', (rooms) => {
+        const existingRoomsContainer = document.getElementById('existing-rooms');
+        existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
+
+        rooms.forEach(({ roomId, roomName }) => {
+            const roomButton = createRoomButton(roomId, roomName);
+            existingRoomsContainer.appendChild(roomButton);
+        });
+    });
+});
+
+function createRoomButton(roomId, roomName) {
+    const roomButton = document.createElement('button');
+    roomButton.textContent = roomName;
+    roomButton.addEventListener('click', () => {
+        joinRoom(roomId);
+    });
+    return roomButton;
+}
+
 
 function createRoom() {
     const roomName = prompt('Enter room name:');
@@ -21,14 +47,11 @@ function createRoom() {
 }
 
 socket.on('room-created', ({ roomId, roomName }) => {
-    const roomButton = document.createElement('button');
-    roomButton.textContent = roomName;
-    roomButton.addEventListener('click', () => {
-        joinRoom(roomName);
-    });
-    document.getElementById('existing-rooms').appendChild(roomButton);
-    
+    const existingRoomsContainer = document.getElementById('existing-rooms');
+    const roomButton = createRoomButton(roomId, roomName);
+    existingRoomsContainer.appendChild(roomButton);
 });
+
 
 document.getElementById('enter-room-button').addEventListener('click', () => {
     const userName = document.getElementById('user-name').value;
@@ -43,6 +66,11 @@ function joinRoom(roomName) {
     roomId = roomName; // Just for the sake of this example, you might need a better way to handle roomIds
     userId = socket.id;
     socket.emit('join-room', roomId, userId);
+
+    // Update UI to show chat room and user display name
+    document.getElementById('home-page').style.display = 'none';
+    document.getElementById('room-selection-page').style.display = 'none';
+    document.getElementById('chat-room-section').style.display = 'block';
 }
 
 socket.on('join-room', () => {
