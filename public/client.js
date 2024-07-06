@@ -9,11 +9,11 @@ socket.on('connect', () => {
 });
 
 // รับข้อมูลห้องทั้งหมดจากเซิร์ฟเวอร์
-socket.on('all-rooms', (rooms) => {
+socket.on('all-rooms', (roomNames) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    rooms.forEach(({roomName }) => {
+    roomNames.forEach(({roomName }) => {
         const roomButton = document.createElement('button');
         roomButton.textContent = roomName;
         roomButton.addEventListener('click', () => {

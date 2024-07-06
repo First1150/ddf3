@@ -10,6 +10,7 @@ const io = socketIo(server);
 const port = process.env.PORT || 3000;
 
 const rooms = new Map();
+const roomNames = []; // เก็บเฉพาะชื่อห้อง
 
 const onlineUsers = new Set(); // เก็บรายชื่อผู้ใช้ที่ออนไลน์
 
@@ -24,9 +25,7 @@ io.on('connection', (socket) => {
     io.emit('update-online-users', Array.from(onlineUsers));
     // เมื่อเชื่อมต่อ
     socket.on('get-all-rooms', () => {
-        // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
-        const allRooms = Array.from(rooms).map(([roomName]) => ({roomName }));
-        socket.emit('all-rooms', allRooms);
+        socket.emit('all-rooms', roomNames); // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
     });
 
     // ฟังก์ชันอื่น ๆ ในการจัดการห้อง และการส่งข้อมูลอื่น ๆ
@@ -44,6 +43,7 @@ io.on('connection', (socket) => {
     socket.on('create-room', (roomName) => {
         const roomId = uuidv4();
         rooms.set(roomId,{ roomName });
+        roomNames.push(roomName); // เพิ่มชื่อห้องใหม่ลงใน Array
         io.emit('room-created', { roomId, roomName });
     });
 
