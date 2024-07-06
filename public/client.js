@@ -42,7 +42,7 @@ function createRoom() {
     joinRoom(roomName);
 }
 
-socket.on('room-created', ({ roomId, roomName }) => {
+socket.on('room-created', ({roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
     roomButton.addEventListener('click', () => {
