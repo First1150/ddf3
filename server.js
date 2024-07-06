@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
     // เมื่อเชื่อมต่อ
 socket.on('get-all-rooms', () => {
     // สร้างอาร์เรย์ของ roomName เท่านั้น
-    const allRooms = Array.from(rooms).map(([roomName]) => ({
+    const allRooms = Array.from(rooms).map(([roomId,roomName]) => ({
         roomName: roomName, // ใช้ roomName ที่ได้จาก Map rooms
     }));
 
