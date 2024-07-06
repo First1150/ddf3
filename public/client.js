@@ -10,6 +10,19 @@ document.getElementById('join-room-button').addEventListener('click', () => {//�
 document.getElementById('create-room-button').addEventListener('click', () => {
     createRoom();
 });
+// หลังจากโหลดหน้าเว็บเสร็จแล้ว
+document.addEventListener('DOMContentLoaded', () => {
+    rooms.forEach((room, roomId) => {
+        const roomButton = document.createElement('button');
+        roomButton.textContent = room.name;
+        roomButton.dataset.roomId = roomId;
+        roomButton.addEventListener('click', () => {
+            joinRoom(roomId);
+        });
+        document.getElementById('existing-rooms').appendChild(roomButton);
+    });
+});
+
 
 function createRoom() {
     const roomName = prompt('Enter room name:');
@@ -23,14 +36,14 @@ function createRoom() {
 socket.on('room-created', ({ roomId, roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
-    roomButton.dataset.roomId = roomName; // ใช้ dataset เก็บ roomId ไว้ในปุ่ม
+    roomButton.dataset.roomId = roomId; // ใช้ dataset เก็บ roomId ไว้ในปุ่ม
     roomButton.addEventListener('click', () => {
-        joinRoom(roomName); // ใช้ roomId ในการเรียก joinRoom
+        joinRoom(roomId); // ใช้ roomId ในการเรียก joinRoom
     });
     document.getElementById('existing-rooms').appendChild(roomButton);
 });
-socket.on('room-closed', (roomName) => {
-    const roomButton = document.querySelector(`button[data-room-id="${roomName}"]`);
+socket.on('room-closed', (roomId) => {
+    const roomButton = document.querySelector(`button[data-room-id="${roomId}"]`);
     if (roomButton) {
         roomButton.remove(); // ลบปุ่มห้องที่ปิด
     }
