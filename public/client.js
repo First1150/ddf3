@@ -2,7 +2,7 @@ const socket = io();
 let roomId;
 let userId;
 
-document.getElementById('join-room-button').addEventListener('click', () => {//ไม่ใช้
+document.getElementById('join-room-button').addEventListener('click', () => {
     document.getElementById('home-page').style.display = 'none';
     document.getElementById('room-selection-page').style.display = 'block';
 });
@@ -10,19 +10,6 @@ document.getElementById('join-room-button').addEventListener('click', () => {//�
 document.getElementById('create-room-button').addEventListener('click', () => {
     createRoom();
 });
-// หลังจากโหลดหน้าเว็บเสร็จแล้ว
-document.addEventListener('DOMContentLoaded', () => {
-    rooms.forEach((room, roomName) => {
-        const roomButton = document.createElement('button');
-        roomButton.textContent = room.name;
-        roomButton.dataset.roomId = roomName;
-        roomButton.addEventListener('click', () => {
-            joinRoom(roomName);
-        });
-        document.getElementById('existing-rooms').appendChild(roomButton);
-    });
-});
-
 
 function createRoom() {
     const roomName = prompt('Enter room name:');
@@ -36,20 +23,14 @@ function createRoom() {
 socket.on('room-created', ({ roomId, roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
-    roomButton.dataset.roomId = roomName; // ใช้ dataset เก็บ roomId ไว้ในปุ่ม
     roomButton.addEventListener('click', () => {
-        joinRoom(roomName); // ใช้ roomId ในการเรียก joinRoom
+        joinRoom(roomName);
     });
     document.getElementById('existing-rooms').appendChild(roomButton);
-});
-socket.on('room-closed', (roomName) => {
-    const roomButton = document.querySelector(`button[data-room-id="${roomName}"]`);
-    if (roomButton) {
-        roomButton.remove(); // ลบปุ่มห้องที่ปิด
-    }
+    
 });
 
-document.getElementById('enter-room-button').addEventListener('click', () => {//ไม่ใช้
+document.getElementById('enter-room-button').addEventListener('click', () => {
     const userName = document.getElementById('user-name').value;
     const roomName = document.getElementById('room-name').value;
     if (userName.trim() && roomName.trim()) {

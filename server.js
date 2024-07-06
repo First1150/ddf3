@@ -33,19 +33,11 @@ io.on('connection', (socket) => {
         io.to(socket.id).emit('join-room');
     });
 
-    // เมื่อมีการสร้างห้อง ให้ส่งข้อมูลกลับไปยังผู้เรียกใช้งานเพื่อแสดงห้องที่สร้างแล้ว
-socket.on('create-room', (roomName) => {
-    const roomId = uuidv4();
-    rooms.set(roomId, { name: roomName, users: new Set() });
-    io.emit('room-created', { roomId, roomName }); // ใช้ io.emit แทน socket.emit
-});
-
-// เมื่อมีการปิดห้อง ให้ประกาศเหตุการณ์ไปยังผู้ใช้ที่เชื่อมต่อทั้งหมด
-socket.on('close-room', (roomId) => {
-    rooms.delete(roomId);
-    io.emit('room-closed', roomId); // ใช้ io.emit ในการประกาศเหตุการณ์ห้องที่ถูกปิด
-});
-
+    socket.on('create-room', (roomName) => {
+        const roomId = uuidv4();
+        rooms.set(roomId, new Set());
+        io.emit('room-created', { roomId, roomName });
+    });
 
     socket.on('chat-message', (roomId, userId, msg) => {
         socket.to(roomId).emit('chat-message', { userId, msg });
