@@ -1,6 +1,6 @@
 const socket = io();
 let roomId;
-let userId= socket.id;
+let userId;
 
 document.getElementById('join-room-button').addEventListener('click', () => {//ไม่ใช้
     document.getElementById('home-page').style.display = 'none';
@@ -47,7 +47,7 @@ document.getElementById('enter-room-button').addEventListener('click', () => {//
 
 function joinRoom(roomName) {
     roomId = roomName; // Just for the sake of this example, you might need a better way to handle roomIds
-    socket.emit('join-room', roomId, userId);
+    socket.emit('join-room', roomId, socket.id);
 }
 
 socket.on('join-room', () => {
