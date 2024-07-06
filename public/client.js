@@ -25,7 +25,7 @@ socket.on('room-created', ({ roomId, roomName }) => {
     roomButton.textContent = roomName;
     roomButton.dataset.roomId = roomId; // ใช้ dataset เก็บ roomId ไว้ในปุ่ม
     roomButton.addEventListener('click', () => {
-        joinRoom(roomId); // ใช้ roomId ในการเรียก joinRoom
+        joinRoom(roomName); // ใช้ roomId ในการเรียก joinRoom
     });
     document.getElementById('existing-rooms').appendChild(roomButton);
 });
