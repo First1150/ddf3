@@ -9,7 +9,7 @@ const io = socketIo(server);
 
 const port = process.env.PORT || 3000;
 
-const rooms = new Map(); // เก็บข้อมูลห้องแชทโดยใช้ Map
+const rooms = new Map();
 
 const onlineUsers = new Set(); // เก็บรายชื่อผู้ใช้ที่ออนไลน์
 
@@ -23,14 +23,13 @@ io.on('connection', (socket) => {
     // ส่งรายชื่อผู้ใช้ที่ออนไลน์ให้กับผู้ใช้ทั้งหมดที่เข้าเว็บไซต์
     io.emit('update-online-users', Array.from(onlineUsers));
     // เมื่อเชื่อมต่อ
-    socket.on('get-all-rooms', () => {
-        // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
-        const allRooms = Array.from(rooms.keys()).map(roomId => ({
-            roomId: roomId,
-            roomName: rooms.get(roomId).roomName
-        }));
-        socket.emit('all-rooms', allRooms);
-    });
+socket.on('get-all-rooms', () => {
+    // ดึง key ของทุก room จาก Map rooms
+    const allRooms = Array.from(rooms.keys());
+
+    // ส่งข้อมูล key ของทุก room กลับไปยัง client ด้วย event 'all-room-names'
+    socket.emit('all-room-names', allRooms);
+});
 
 
     // ฟังก์ชันอื่น ๆ ในการจัดการห้อง และการส่งข้อมูลอื่น ๆ

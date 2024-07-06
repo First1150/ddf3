@@ -13,18 +13,15 @@ socket.on('all-rooms', (rooms) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    rooms.forEach(room => {
+    rooms.forEach(({roomName }) => {
         const roomButton = document.createElement('button');
-        roomButton.textContent = room.roomName;
+        roomButton.textContent = roomName;
         roomButton.addEventListener('click', () => {
-            joinRoom(room.roomName);
+            joinRoom(roomName);
         });
         existingRoomsContainer.appendChild(roomButton);
     });
 });
-
-
-
 
 
 document.getElementById('join-room-button').addEventListener('click', () => {
@@ -45,7 +42,7 @@ function createRoom() {
     joinRoom(roomName);
 }
 
-socket.on('room-created', ({roomName }) => {
+socket.on('room-created', ({ roomId, roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
     roomButton.addEventListener('click', () => {
@@ -65,8 +62,9 @@ document.getElementById('enter-room-button').addEventListener('click', () => {
 });
 
 function joinRoom(roomName) {
+    roomId = roomName; // Just for the sake of this example, you might need a better way to handle roomIds
     userId = socket.id;
-    socket.emit('join-room', roomName, userId);
+    socket.emit('join-room', roomId, userId);
 }
 
 socket.on('join-room', () => {
