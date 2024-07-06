@@ -13,7 +13,7 @@ socket.on('all-rooms', (rooms) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    rooms.forEach(({ roomId, roomName }) => {
+    rooms.forEach(({roomName }) => {
         const roomButton = document.createElement('button');
         roomButton.textContent = roomName;
         roomButton.addEventListener('click', () => {
