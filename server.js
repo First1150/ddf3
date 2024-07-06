@@ -9,7 +9,7 @@ const io = socketIo(server);
 
 const port = process.env.PORT || 3000;
 
-const rooms = new Map();
+const roomNamesSet = new Set(); // เก็บเฉพาะชื่อห้องเป็น Set
 
 const onlineUsers = new Set(); // เก็บรายชื่อผู้ใช้ที่ออนไลน์
 
@@ -24,19 +24,8 @@ io.on('connection', (socket) => {
     io.emit('update-online-users', Array.from(onlineUsers));
     // เมื่อเชื่อมต่อ
 socket.on('get-all-rooms', () => {
-    // สร้าง Set เพื่อเก็บเฉพาะ roomName ที่ไม่ซ้ำกัน
-    const roomNamesSet = new Set();
-    rooms.forEach((users, roomId) => {
-        roomNamesSet.add(roomId); // เพิ่ม roomId เข้าไปใน Set
-    });
-
-    // แปลง Set เป็นอาร์เรย์ของ objects ที่มี property roomName เท่านั้น
-    const allRooms = Array.from(roomNamesSet).map(roomName => ({
-        roomName: roomName,
-    }));
-
-    // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
-    socket.emit('all-rooms', allRooms);
+    // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client ในรูปแบบของ Set ที่มีชื่อห้องทั้งหมด
+    socket.emit('all-rooms', roomNamesSet);
 });
 
 
