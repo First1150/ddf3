@@ -24,8 +24,8 @@ io.on('connection', (socket) => {
     io.emit('update-online-users', Array.from(onlineUsers));
     // เมื่อเชื่อมต่อ
 socket.on('get-all-rooms', () => {
-    // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client ในรูปแบบของ Array ที่มีชื่อห้องทั้งหมด
-    socket.emit('all-rooms', Array.from(rooms.values()));
+    // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
+    const allRooms = Array.from(rooms.values()); // rooms เป็น Map ที่เก็บเฉพาะชื่อห้อง (room name) เท่านั้น
     socket.emit('all-rooms', allRooms);
 });
 
