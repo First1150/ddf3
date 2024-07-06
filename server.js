@@ -25,8 +25,13 @@ io.on('connection', (socket) => {
     // เมื่อเชื่อมต่อ
     socket.on('get-all-rooms', () => {
         // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
-        const allRooms = Array.from(rooms).map(([roomName]) => ({roomName }));
+        const allRooms = Array.from(rooms).map(([roomId, { roomName }]) => ({ roomName }));
         socket.emit('all-rooms', allRooms);
+    });
+    socket.on('create-room', (roomName) => {
+        const roomId = uuidv4();
+        rooms.set(roomId, { roomName });
+        io.emit('room-created', { roomName });
     });
 
     // ฟังก์ชันอื่น ๆ ในการจัดการห้อง และการส่งข้อมูลอื่น ๆ
