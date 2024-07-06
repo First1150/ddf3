@@ -28,7 +28,7 @@ socket.on('get-all-rooms', () => {
     const allRooms = Array.from(rooms.keys());
 
     // ส่งข้อมูล key ของทุก room กลับไปยัง client ด้วย event 'all-room-names'
-    socket.emit('all-room-names', allRooms);
+    socket.emit('all-rooms', allRooms);
 });
 
 
