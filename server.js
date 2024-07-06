@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
     // เมื่อเชื่อมต่อ
     socket.on('get-all-rooms', () => {
         // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
-        const allRooms = Array.from(rooms).map(([roomId, roomName]) => ({ roomId, roomName }));
+        const allRooms = Array.from(rooms).map(([roomName]) => ({roomName }));
         socket.emit('all-rooms', allRooms);
     });
 
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
 
     socket.on('create-room', (roomName) => {
         const roomId = uuidv4();
-        rooms.set(roomId, new Set());
+        rooms.set(roomId,{ roomName });
         io.emit('room-created', { roomId, roomName });
     });
 

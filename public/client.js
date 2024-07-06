@@ -13,16 +13,15 @@ socket.on('all-rooms', (rooms) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    rooms.forEach(({ roomId, roomName }) => {
+    rooms.forEach(({roomName }) => {
         const roomButton = document.createElement('button');
         roomButton.textContent = roomName;
         roomButton.addEventListener('click', () => {
-            joinRoom(roomId); // ส่ง roomId ไปที่ฟังก์ชัน joinRoom
+            joinRoom(roomName);
         });
         existingRoomsContainer.appendChild(roomButton);
     });
 });
-
 
 document.getElementById('join-room-button').addEventListener('click', () => {
     document.getElementById('home-page').style.display = 'none';
@@ -61,7 +60,8 @@ document.getElementById('enter-room-button').addEventListener('click', () => {
     }
 });
 
-function joinRoom(roomId) { // Just for the sake of this example, you might need a better way to handle roomIds
+function joinRoom(roomName) {
+    roomId = roomName; // Just for the sake of this example, you might need a better way to handle roomIds
     userId = socket.id;
     socket.emit('join-room', roomId, userId);
 }
