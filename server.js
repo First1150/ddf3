@@ -12,16 +12,22 @@ const port = process.env.PORT || 3000;
 const rooms = new Map();
 
 const onlineUsers = new Set(); // เก็บรายชื่อผู้ใช้ที่ออนไลน์
+const onlineRooms = new Set(); // เก็บรายชื่อห้อง
 
 app.use(express.static('public'));
 
 io.on('connection', (socket) => {
     const userId = socket.id; // สร้าง userId โดยใช้ id ของ socket
+    const roomId = roomName;
 
     // เพิ่มผู้ใช้เข้ารายการของผู้ใช้ที่ออนไลน์
     onlineUsers.add(userId);
     // ส่งรายชื่อผู้ใช้ที่ออนไลน์ให้กับผู้ใช้ทั้งหมดที่เข้าเว็บไซต์
     io.emit('update-online-users', Array.from(onlineUsers));
+     // เพิ่มห้อง
+    onlineRooms.add(roomId);
+    // ส่งรายห้อง
+    io.emit('update-online-rooms', Array.from(onlineRooms));
 
     socket.on('join-room', (roomId, userId) => {
         socket.join(roomId);
