@@ -27,7 +27,7 @@ socket.on('room-created', ({ roomId, roomName }) => {
     roomButton.addEventListener('click', () => {
         joinRoom(roomName);
     });
-    document.getElementById('existing-rooms-selection').appendChild(roomButton);
+    document.getElementById('existing-rooms').appendChild(roomButton);
 });
 
 socket.on('room-deleted', (roomId) => {
