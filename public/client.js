@@ -23,27 +23,20 @@ function createRoom() {
 socket.on('room-created', ({ roomId, roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
+    roomButton.setAttribute('data-room-id', roomId); // เพิ่ม attribute เพื่อเก็บ roomId ไว้กับปุ่ม
     roomButton.addEventListener('click', () => {
         joinRoom(roomName);
     });
-    document.getElementById('existing-rooms-home').appendChild(roomButton.cloneNode(true));
     document.getElementById('existing-rooms-selection').appendChild(roomButton);
-    // เพิ่มปุ่มห้องใหม่ให้กับผู้ใช้ที่อยู่ในหน้าเว็บไซต์แล้วด้วยการส่งข้อมูลให้กับผู้ใช้ทั้งหมด
-    socket.emit('update-room-buttons', roomName);
-    
 });
-// เพิ่มการรับ socket event 'update-room-buttons'
-socket.on('update-room-buttons', (roomName) => {
-    const roomButton = document.createElement('button');
-    roomButton.textContent = roomName;
-    roomButton.addEventListener('click', () => {
-        joinRoom(roomName);
-    });
 
-    // Add room button to both home and selection pages
-    document.getElementById('existing-rooms-home').appendChild(roomButton.cloneNode(true));
-    document.getElementById('existing-rooms-selection').appendChild(roomButton);
+socket.on('room-deleted', (roomId) => {
+    const roomButtonToRemove = document.querySelector(`button[data-room-id="${roomId}"]`);
+    if (roomButtonToRemove) {
+        roomButtonToRemove.remove();
+    }
 });
+
 
 document.getElementById('enter-room-button').addEventListener('click', () => {
     const userName = document.getElementById('user-name').value;

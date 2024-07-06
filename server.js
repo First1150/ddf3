@@ -37,7 +37,29 @@ io.on('connection', (socket) => {
         const roomId = uuidv4();
         rooms.set(roomId, new Set());
         io.emit('room-created', { roomId, roomName });
+    
+        // ใส่ roomId ใน Set ของห้องและส่ง roomId ไปให้ client เพื่อจัดการกับปุ่มห้อง
+        socket.roomId = roomId;
     });
+    
+    socket.on('disconnect', () => {
+        onlineUsers.delete(userId);
+        io.emit('update-online-users', Array.from(onlineUsers));
+    
+        rooms.forEach((users, roomId) => {
+            if (users.has(userId)) {
+                users.delete(userId);
+                socket.to(roomId).emit('chat-message', { userId: 'system', msg: `User ${userId} has left the room.` });
+    
+                // ถ้าห้องนั้นไม่มีใครเหลืออยู่ ให้ลบห้องออก
+                if (users.size === 0) {
+                    rooms.delete(roomId);
+                    io.emit('room-deleted', roomId); // ส่ง event ไปยัง client เพื่อลบปุ่มห้องที่ไม่มีใครใช้ออกจากหน้าเว็บ
+                }
+            }
+        });
+    });
+    
 
     socket.on('chat-message', (roomId, userId, msg) => {
         socket.to(roomId).emit('chat-message', { userId, msg });
