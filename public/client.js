@@ -47,7 +47,8 @@ document.getElementById('enter-room-button').addEventListener('click', () => {//
 
 function joinRoom(roomName) {
     roomId = roomName; // Just for the sake of this example, you might need a better way to handle roomIds
-    socket.emit('join-room', roomId, socket.id);
+    userId = socket.id;
+    socket.emit('join-room', roomId, userId);
 }
 
 socket.on('join-room', () => {
