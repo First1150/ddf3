@@ -2,6 +2,28 @@ const socket = io();
 let roomId;
 let userId;
 
+// หลังจากเชื่อมต่อ Socket.io แล้ว
+socket.on('connect', () => {
+    // ขอข้อมูลห้องทั้งหมดจากเซิร์ฟเวอร์
+    socket.emit('get-all-rooms');
+});
+
+// รับข้อมูลห้องทั้งหมดจากเซิร์ฟเวอร์
+socket.on('all-rooms', (rooms) => {
+    const existingRoomsContainer = document.getElementById('existing-rooms');
+    existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
+
+    rooms.forEach(({ roomId, roomName }) => {
+        const roomButton = document.createElement('button');
+        roomButton.textContent = roomName;
+        roomButton.addEventListener('click', () => {
+            joinRoom(roomName);
+        });
+        existingRoomsContainer.appendChild(roomButton);
+    });
+});
+
+
 document.getElementById('join-room-button').addEventListener('click', () => {
     document.getElementById('home-page').style.display = 'none';
     document.getElementById('room-selection-page').style.display = 'block';
@@ -23,20 +45,12 @@ function createRoom() {
 socket.on('room-created', ({ roomId, roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
-    roomButton.setAttribute('data-room-id', roomId); // เพิ่ม attribute เพื่อเก็บ roomId ไว้กับปุ่ม
     roomButton.addEventListener('click', () => {
         joinRoom(roomName);
     });
     document.getElementById('existing-rooms').appendChild(roomButton);
+    
 });
-
-socket.on('room-deleted', (roomId) => {
-    const roomButtonToRemove = document.querySelector(`button[data-room-id="${roomId}"]`);
-    if (roomButtonToRemove) {
-        roomButtonToRemove.remove();
-    }
-});
-
 
 document.getElementById('enter-room-button').addEventListener('click', () => {
     const userName = document.getElementById('user-name').value;
