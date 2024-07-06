@@ -1,6 +1,6 @@
 const socket = io();
 let roomId;
-let userId;
+let userId= socket.id;
 
 document.getElementById('join-room-button').addEventListener('click', () => {//ไม่ใช้
     document.getElementById('home-page').style.display = 'none';
@@ -23,14 +23,14 @@ function createRoom() {
 socket.on('room-created', ({ roomId, roomName }) => {
     const roomButton = document.createElement('button');
     roomButton.textContent = roomName;
-    roomButton.dataset.roomId = roomId; // ใช้ dataset เก็บ roomId ไว้ในปุ่ม
+    roomButton.dataset.roomId = roomName; // ใช้ dataset เก็บ roomId ไว้ในปุ่ม
     roomButton.addEventListener('click', () => {
         joinRoom(roomName); // ใช้ roomId ในการเรียก joinRoom
     });
     document.getElementById('existing-rooms').appendChild(roomButton);
 });
-socket.on('room-closed', (roomId) => {
-    const roomButton = document.querySelector(`button[data-room-id="${roomId}"]`);
+socket.on('room-closed', (roomName) => {
+    const roomButton = document.querySelector(`button[data-room-id="${roomName}"]`);
     if (roomButton) {
         roomButton.remove(); // ลบปุ่มห้องที่ปิด
     }
@@ -47,7 +47,7 @@ document.getElementById('enter-room-button').addEventListener('click', () => {//
 
 function joinRoom(roomName) {
     roomId = roomName; // Just for the sake of this example, you might need a better way to handle roomIds
-    socket.emit('join-room', roomId, socket.id);
+    socket.emit('join-room', roomId, userId);
 }
 
 socket.on('join-room', () => {
