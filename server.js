@@ -10,7 +10,7 @@ const io = socketIo(server);
 const port = process.env.PORT || 3000;
 
 const rooms = new Map();
-const roomNames = []; // เก็บเฉพาะชื่อห้อง
+const roomNames = [123]; // เก็บเฉพาะชื่อห้อง
 
 const onlineUsers = new Set(); // เก็บรายชื่อผู้ใช้ที่ออนไลน์
 

@@ -13,8 +13,13 @@ socket.on('all-rooms', (roomNames) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    roomNames.forEach(({roomName }) => {
-        console.log(roomName);
+    roomNames.forEach((roomName) => {
+        const roomButton = document.createElement('button');
+        roomButton.textContent = roomName;
+        roomButton.addEventListener('click', () => {
+            joinRoom(roomName);
+        });
+        existingRoomsContainer.appendChild(roomButton);
     });
 });
 
