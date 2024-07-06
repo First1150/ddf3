@@ -23,11 +23,14 @@ io.on('connection', (socket) => {
     // ส่งรายชื่อผู้ใช้ที่ออนไลน์ให้กับผู้ใช้ทั้งหมดที่เข้าเว็บไซต์
     io.emit('update-online-users', Array.from(onlineUsers));
     // เมื่อเชื่อมต่อ
-socket.on('get-all-rooms', () => {
-    // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
-    const allRooms = Array.from(rooms.values()); // rooms เป็น Map ที่เก็บเฉพาะชื่อห้อง (room name) เท่านั้น
-    socket.emit('all-rooms', allRooms);
-});
+    socket.on('get-all-rooms', () => {
+        // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
+        const allRooms = Array.from(rooms.values()).map(room => ({
+            roomId: room.roomId,
+            roomName: room.roomName
+        }));
+        socket.emit('all-rooms', allRooms);
+    });
 
 
     // ฟังก์ชันอื่น ๆ ในการจัดการห้อง และการส่งข้อมูลอื่น ๆ

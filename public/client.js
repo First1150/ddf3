@@ -13,11 +13,11 @@ socket.on('all-rooms', (rooms) => {
     const existingRoomsContainer = document.getElementById('existing-rooms');
     existingRoomsContainer.innerHTML = ''; // ล้างข้อมูลเก่าทิ้ง
 
-    rooms.forEach(roomName => {
+    rooms.forEach(room => {
         const roomButton = document.createElement('button');
-        roomButton.textContent = roomName;
+        roomButton.textContent = room.roomName;
         roomButton.addEventListener('click', () => {
-            joinRoom(roomName);
+            joinRoom(room.roomId);
         });
         existingRoomsContainer.appendChild(roomButton);
     });
