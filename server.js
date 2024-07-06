@@ -24,9 +24,15 @@ io.on('connection', (socket) => {
     io.emit('update-online-users', Array.from(onlineUsers));
     // เมื่อเชื่อมต่อ
 socket.on('get-all-rooms', () => {
-    // สร้างอาร์เรย์ของ roomName เท่านั้น
-    const allRooms = Array.from(rooms).map(([roomName]) => ({
-        roomName: roomName, // ใช้ roomName ที่ได้จาก Map rooms
+    // สร้าง Set เพื่อเก็บเฉพาะ roomName ที่ไม่ซ้ำกัน
+    const roomNamesSet = new Set();
+    rooms.forEach((users, roomId) => {
+        roomNamesSet.add(roomId); // เพิ่ม roomId เข้าไปใน Set
+    });
+
+    // แปลง Set เป็นอาร์เรย์ของ objects ที่มี property roomName เท่านั้น
+    const allRooms = Array.from(roomNamesSet).map(roomName => ({
+        roomName: roomName,
     }));
 
     // ส่งข้อมูลห้องทั้งหมดกลับไปยัง client
